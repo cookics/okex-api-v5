@@ -31,7 +31,7 @@ class FundingAPI(Client):
     # Get Deposit History
     def get_deposit_history(self, ccy=None, state=None, after=None, before=None, limit=None):
         params = {'ccy': ccy, 'state': state, 'after': after, 'before': before, 'limit': limit}
-        return self._request_with_params(GET, DEPOSIT_HISTORIY, params)
+        return self._request_with_params(GET, DEPOSIT_HISTORY, params)
 
     # Get Withdrawal History
     def get_withdrawal_history(self, ccy=None, state=None, after=None, before=None, limit=None):

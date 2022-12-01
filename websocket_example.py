@@ -498,7 +498,7 @@ class App(customtkinter.CTk):
 
         self.title("CustomTkinter complex_example.py")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        # self.protocol("WM_DELETE_WINDOW", self.on_closiing)
+        # self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # ============ create ============
 
