@@ -6,15 +6,15 @@ import hmac
 import base64
 import zlib
 import datetime
-import time
-import customtkinter
 import tkinter
 import customtkinter
 import random as rnd
 import threading
 import time
 from okex.consts import *
-import Users.Bennett.Desktop.api_key.py
+from api_key import API_KEY_DEMO as API_KEY, PASSPHRASE_DEMO as PASSPASSPHRASE, SECRET_KEY_DEMO as SECRET_KEY
+
+
 
 
 def get_timestamp():
