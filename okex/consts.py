@@ -1,6 +1,8 @@
 # http header
 API_URL = 'https://www.okx.com'
 
+TEST = 'TEST'
+
 WS_URL_PUBLIC = "wss://ws.okx.com:8443/ws/v5/public"
 WS_URL_PUBLIC_DEMO = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
 WS_URL_PRIVATE = "wss://ws.okx.com:8443/ws/v5/private"
