@@ -20,6 +20,7 @@ def get_timestamp():
     t = now.isoformat("T", "milliseconds")
     return t + "Z"
 
+
 def get_server_time():
     url = API_URL + SERVER_TIMESTAMP_URL
     response = requests.get(url)
@@ -28,8 +29,10 @@ def get_server_time():
     else:
         return ""
 
+
 def get_local_timestamp():
     return int(time.time())
+
 
 def login_params(timestamp, api_key, passphrase, secret_key):
     message = timestamp + 'GET' + '/users/self/verify'
@@ -45,6 +48,7 @@ def login_params(timestamp, api_key, passphrase, secret_key):
     login_str = json.dumps(login_param)
     return login_str
 
+
 def partial(res):
     data_obj = res['data'][0]
     bids = data_obj['bids']
@@ -55,6 +59,7 @@ def partial(res):
     # print('全量数据asks为：' + str(asks))
     # print('档数为：' + str(len(asks)))
     return bids, asks, instrument_id
+
 
 def update_bids(res, bids_p):
     # 获取增量bids数据
@@ -81,6 +86,7 @@ def update_bids(res, bids_p):
         # print('合并后的bids为：' + str(bids_p) + '，档数为：' + str(len(bids_p)))
     return bids_p
 
+
 def update_asks(res, asks_p):
     # 获取增量asks数据
     asks_u = res['data'][0]['asks']
@@ -106,11 +112,13 @@ def update_asks(res, asks_p):
         # print('合并后的asks为：' + str(asks_p) + '，档数为：' + str(len(asks_p)))
     return asks_p
 
+
 def sort_num(n):
     if n.isdigit():
         return int(n)
     else:
         return float(n)
+
 
 def check(bids, asks):
     # 获取bid档str
@@ -120,10 +128,10 @@ def check(bids, asks):
     while count_bid <= 25:
         if count_bid > len(bids):
             break
-        bids_l.append(bids[count_bid-1])
+        bids_l.append(bids[count_bid - 1])
         count_bid += 1
     for j in bids_l:
-        str_bid = ':'.join(j[0 : 2])
+        str_bid = ':'.join(j[0: 2])
         bid_l.append(str_bid)
     # 获取ask档str
     asks_l = []
@@ -132,10 +140,10 @@ def check(bids, asks):
     while count_ask <= 25:
         if count_ask > len(asks):
             break
-        asks_l.append(asks[count_ask-1])
+        asks_l.append(asks[count_ask - 1])
         count_ask += 1
     for k in asks_l:
-        str_ask = ':'.join(k[0 : 2])
+        str_ask = ':'.join(k[0: 2])
         ask_l.append(str_ask)
     # 拼接str
     num = ''
@@ -160,6 +168,7 @@ def check(bids, asks):
     fina = change(int_checksum)
     return fina
 
+
 def change(num_old):
     num = pow(2, 31) - 1
     if num_old > num:
@@ -167,6 +176,7 @@ def change(num_old):
     else:
         out = num_old
     return out
+
 
 async def subscribe_without_login(url, channels):
     l = []
@@ -260,6 +270,7 @@ async def subscribe_without_login(url, channels):
             print("连接断开，正在重连……")
             continue
 
+
 async def subscribe(url, api_key, passphrase, secret_key, channels):
     while True:
         try:
@@ -297,6 +308,7 @@ async def subscribe(url, api_key, passphrase, secret_key, channels):
             print("连接断开，正在重连……")
             continue
 
+
 async def trade(url, api_key, passphrase, secret_key, trade_param):
     while True:
         try:
@@ -333,6 +345,7 @@ async def trade(url, api_key, passphrase, secret_key, trade_param):
             print("连接断开，正在重连……")
             continue
 
+
 async def unsubscribe(url, api_key, passphrase, secret_key, channels):
     async with websockets.connect(url) as ws:
         # login
@@ -353,6 +366,7 @@ async def unsubscribe(url, api_key, passphrase, secret_key, channels):
         res = await ws.recv()
         print(f"recv: {res}")
 
+
 async def unsubscribe_without_login(url, channels):
     async with websockets.connect(url) as ws:
         sub_param = {"op": "unsubscribe", "args": channels}
@@ -361,6 +375,7 @@ async def unsubscribe_without_login(url, channels):
         print(f"send: {sub_str}")
         res = await ws.recv()
         print(f"recv: {res}")
+
 
 """
 Public
@@ -399,17 +414,17 @@ Trade
 '''
 
 trade_param_mkt = {
-  "id": "1512",
-  "op": "order",
-  "args": [
-    {
-      "side": "buy",
-      "instId": "BTC-USDT",
-      "tdMode": "isolated",
-      "ordType": "market",
-      "sz": "100"
-    }
-  ]
+    "id": "1512",
+    "op": "order",
+    "args": [
+        {
+            "side": "buy",
+            "instId": "BTC-USDT",
+            "tdMode": "isolated",
+            "ordType": "market",
+            "sz": "100"
+        }
+    ]
 }
 trade_param_limit = {
     "id": "1512",
@@ -428,9 +443,9 @@ trade_param_batch = {
     "id": "1512",
     "op": "batch-orders",
     "args": [
-         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
-         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
-     ]
+        {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
+        {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
+    ]
 }
 trade_param_cancel = {
     "id": "1512",
@@ -443,9 +458,9 @@ trade_param_batch_cancel = {
     "id": "1512",
     "op": "batch-cancel-orders",
     "args": [
-         {"instId": "BTC-USDT", "ordId": "259432098826694656"},
-         {"instId": "BTC-USDT", "ordId": "259432098826694658"}
-     ]
+        {"instId": "BTC-USDT", "ordId": "259432098826694656"},
+        {"instId": "BTC-USDT", "ordId": "259432098826694658"}
+    ]
 }
 trade_param_amend = {
     "id": "1512",
@@ -458,12 +473,12 @@ trade_param_batch_amend = {
     "id": "1512",
     "op": "batch-amend-orders",
     "args": [
-         {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
-         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
-     ]}
+        {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
+        {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
+    ]}
+
 
 class App(customtkinter.CTk):
-
     WIDTH = 780
     HEIGHT = 520
 
@@ -483,7 +498,7 @@ class App(customtkinter.CTk):
 
         self.title("CustomTkinter complex_example.py")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        #self.protocol("WM_DELETE_WINDOW", self.on_closiing)
+        # self.protocol("WM_DELETE_WINDOW", self.on_closiing)
 
         # ============ create ============
 
@@ -493,18 +508,19 @@ class App(customtkinter.CTk):
         self.frame_2 = customtkinter.CTkFrame(master=self, )
         self.frame_2.pack(pady=20, padx=60, fill="both", expand=True)
 
-        self.button_2 = customtkinter.CTkButton(master=self.frame_2, command=lambda: threading.Thread(target=run_trades).start(), corner_radius=0)
+        self.button_2 = customtkinter.CTkButton(master=self.frame_2,
+                                                command=lambda: threading.Thread(target=run_trades).start(),
+                                                corner_radius=0)
         self.button_2.pack()
 
         self.label_1 = customtkinter.CTkLabel(master=self.frame_1, justify=tkinter.LEFT)
         self.label_1.pack()  # pady=12, padx=10)
 
         for i in range(7):
-            #self.xf[i].set("Poo")
+            # self.xf[i].set("Poo")
             self.button[i] = customtkinter.CTkButton(master=self.frame_1, command=self.button_callback, corner_radius=0,
-                                                textvariable=self.xf[i])
+                                                     textvariable=self.xf[i])
             self.button[i].pack()  # pady=12, padx=10)
-
 
     def button_callback(self):
         print("press")
@@ -512,20 +528,24 @@ class App(customtkinter.CTk):
             r = rnd.random()
             self.xf[i].set(round(r, 6))
 
+
 url = WS_URL_PUBLIC_DEMO
+
+
 def run_trades():
     asyncio.set_event_loop(loop)
     loop.run_until_complete(subscribe_without_login(url, channels))
     loop.close()
+
+
 loop = asyncio.get_event_loop()
 app = App()
 app.mainloop()
 
-#run_trades()
+# run_trades()
 
 
-
-#loop.run_until_complete(subscribe_without_login(url, channels))
+# loop.run_until_complete(subscribe_without_login(url, channels))
 
 
 # loop.run_until_complete(subscribe(url, api_key, passphrase, secret_key, channels))
@@ -533,4 +553,4 @@ app.mainloop()
 
 # loop.run_until_complete(trade(url, api_key, passphrase, secret_key, trade_param))
 
-#loop.close()
+# loop.close()
