@@ -15,13 +15,10 @@ from okex.consts import *
 from api_key import API_KEY_DEMO as API_KEY, PASSPHRASE_DEMO as PASSPASSPHRASE, SECRET_KEY_DEMO as SECRET_KEY
 
 
-
-
 def get_timestamp():
     now = datetime.datetime.now()
     t = now.isoformat("T", "milliseconds")
     return t + "Z"
-
 
 def get_server_time():
     url = API_URL + SERVER_TIMESTAMP_URL
@@ -31,10 +28,8 @@ def get_server_time():
     else:
         return ""
 
-
 def get_local_timestamp():
     return int(time.time())
-
 
 def login_params(timestamp, api_key, passphrase, secret_key):
     message = timestamp + 'GET' + '/users/self/verify'
@@ -50,7 +45,6 @@ def login_params(timestamp, api_key, passphrase, secret_key):
     login_str = json.dumps(login_param)
     return login_str
 
-
 def partial(res):
     data_obj = res['data'][0]
     bids = data_obj['bids']
@@ -61,7 +55,6 @@ def partial(res):
     # print('全量数据asks为：' + str(asks))
     # print('档数为：' + str(len(asks)))
     return bids, asks, instrument_id
-
 
 def update_bids(res, bids_p):
     # 获取增量bids数据
@@ -88,7 +81,6 @@ def update_bids(res, bids_p):
         # print('合并后的bids为：' + str(bids_p) + '，档数为：' + str(len(bids_p)))
     return bids_p
 
-
 def update_asks(res, asks_p):
     # 获取增量asks数据
     asks_u = res['data'][0]['asks']
@@ -114,13 +106,11 @@ def update_asks(res, asks_p):
         # print('合并后的asks为：' + str(asks_p) + '，档数为：' + str(len(asks_p)))
     return asks_p
 
-
 def sort_num(n):
     if n.isdigit():
         return int(n)
     else:
         return float(n)
-
 
 def check(bids, asks):
     # 获取bid档str
@@ -170,7 +160,6 @@ def check(bids, asks):
     fina = change(int_checksum)
     return fina
 
-
 def change(num_old):
     num = pow(2, 31) - 1
     if num_old > num:
@@ -179,8 +168,6 @@ def change(num_old):
         out = num_old
     return out
 
-
-# subscribe channels un_need login
 async def subscribe_without_login(url, channels):
     l = []
     while True:
@@ -273,8 +260,6 @@ async def subscribe_without_login(url, channels):
             print("连接断开，正在重连……")
             continue
 
-
-# subscribe channels need login
 async def subscribe(url, api_key, passphrase, secret_key, channels):
     while True:
         try:
@@ -312,8 +297,6 @@ async def subscribe(url, api_key, passphrase, secret_key, channels):
             print("连接断开，正在重连……")
             continue
 
-
-# trade
 async def trade(url, api_key, passphrase, secret_key, trade_param):
     while True:
         try:
@@ -350,8 +333,6 @@ async def trade(url, api_key, passphrase, secret_key, trade_param):
             print("连接断开，正在重连……")
             continue
 
-
-# unsubscribe channels
 async def unsubscribe(url, api_key, passphrase, secret_key, channels):
     async with websockets.connect(url) as ws:
         # login
@@ -372,16 +353,12 @@ async def unsubscribe(url, api_key, passphrase, secret_key, channels):
         res = await ws.recv()
         print(f"recv: {res}")
 
-
-# unsubscribe channels
 async def unsubscribe_without_login(url, channels):
     async with websockets.connect(url) as ws:
-        # unsubscribe
         sub_param = {"op": "unsubscribe", "args": channels}
         sub_str = json.dumps(sub_param)
         await ws.send(sub_str)
         print(f"send: {sub_str}")
-
         res = await ws.recv()
         print(f"recv: {res}")
 
@@ -400,7 +377,7 @@ channels = [{"channel": "trades", "instId": instId}]
 channels = [{"channel": "estimated-price", "instType": instType, "uly": "BTC-USD"}]
 channels = [{"channel": "mark-price", "instId": instId}]
 channels = [{"channel": "mark-price-candle1D", "instId": instId}]
-channels = [{"channel": "price-limit", "instId":instId}]
+channels = [{"channel": "price-limit", "instId": instId}]
 channels = [{"channel": "books", "instId": instId}]
 channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
 channels = [{"channel": "funding-rate", "instId": instId}]
@@ -421,9 +398,7 @@ channels = [{"channel": "orders-algo", "instType": instType, "uly": "BTC-USD", "
 Trade
 '''
 
-
-
-trade_pram_mkt = {
+trade_param_mkt = {
   "id": "1512",
   "op": "order",
   "args": [
@@ -457,7 +432,6 @@ trade_param_batch = {
          {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
      ]
 }
-
 trade_param_cancel = {
     "id": "1512",
     "op": "cancel-order",
@@ -465,7 +439,6 @@ trade_param_cancel = {
         {"instId": "BTC-USDT", "ordId": "259424589042823169"}
     ]
 }
-
 trade_param_batch_cancel = {
     "id": "1512",
     "op": "batch-cancel-orders",
@@ -474,7 +447,6 @@ trade_param_batch_cancel = {
          {"instId": "BTC-USDT", "ordId": "259432098826694658"}
      ]
 }
-
 trade_param_amend = {
     "id": "1512",
     "op": "amend-order",
@@ -482,7 +454,6 @@ trade_param_amend = {
         {"instId": "BTC-USDT", "ordId": "259432767558135808", "newSz": "2"}
     ]
 }
-
 trade_param_batch_amend = {
     "id": "1512",
     "op": "batch-amend-orders",
