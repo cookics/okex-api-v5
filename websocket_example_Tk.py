@@ -11,7 +11,8 @@ import customtkinter
 import random as rnd
 import threading
 import time
-import okex.consts as C
+from okex.consts import *
+from api_key import API_KEY_DEMO as API_KEY, PASSPHRASE_DEMO as PASSPHRASE, SECRET_KEY_DEMO as SECRET_KEY
 
 
 def get_timestamp():
@@ -374,113 +375,114 @@ class WS:
             print(f"recv: {res}")
 
 
-api_key = ""
-secret_key = ""
-passphrase = ""
+"""
+Public
+"""
 
-# WebSocket公共频道 public channels
-# 实盘 real trading
-url = "wss://ws.okx.com:8443/ws/v5/public"
-# 模拟盘 demo trading
-# url = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
+instId = BTC_SWAP
+instType = SWAP
 
-# WebSocket私有频道 private channels
-# 实盘 real trading
-# url = "wss://ws.okx.com:8443/ws/v5/private"
-# 模拟盘 demo trading
-# url = "wss://ws.okx.com:8443/ws/v5/private?brokerId=9999"
+channels = [{"channel": "instruments", "instType": instType}]
+channels = [{"channel": "tickers", "instId": instId}]
+channels = [{"channel": "open-interest", "instId": instId}]
+channels = [{"channel": "candle1m", "instId": instId}]
+channels = [{"channel": "trades", "instId": instId}]
+channels = [{"channel": "estimated-price", "instType": instType, "uly": "BTC-USD"}]
+channels = [{"channel": "mark-price", "instId": instId}]
+channels = [{"channel": "mark-price-candle1D", "instId": instId}]
+channels = [{"channel": "price-limit", "instId": instId}]
+channels = [{"channel": "books", "instId": instId}]
+channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
+channels = [{"channel": "funding-rate", "instId": instId}]
+channels = [{"channel": "index-candle1m", "instId": instId}]
+channels = [{"channel": "index-tickers", "instId": instId}]
+channels = [{"channel": "status"}]
 
-'''
-公共频道 public channel
-:param channel: 频道名
-:param instType: 产品类型
-:param instId: 产品ID
-:param uly: 合约标的指数
+"""
+Private
+"""
 
-'''
-
-# 产品频道
-# channels = [{"channel": "instruments", "instType": "FUTURES"}]
-# 行情频道 tickers channel
-# channels = [{"channel": "tickers", "instId": "BTC-USD-210326"}]
-# 持仓总量频道 
-# channels = [{"channel": "open-interest", "instId": "BTC-USD-210326"}]
-# K线频道
-# channels = [{"channel": "candle1m", "instId": "BTC-USD-210326"}]
-# 交易频道
-# channels = [{"channel": "trades", "instId": "BTC-USD-201225"}]
-# 预估交割/行权价格频道
-# channels = [{"channel": "estimated-price", "instType": "FUTURES", "uly": "BTC-USD"}]
-# 标记价格频道
-# channels = [{"channel": "mark-price", "instId": "BTC-USDT-210326"}]
-# 标记价格K线频道
-# channels = [{"channel": "mark-price-candle1D", "instId": "BTC-USD-201225"}]
-# 限价频道
-# channels = [{"channel": "price-limit", "instId": "BTC-USD-201225"}]
-# 深度频道
-channels = [{"channel": "books", "instId": "BTC-USD-SWAP"}]
-# 期权定价频道
-# channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
-# 资金费率频道
-# channels = [{"channel": "funding-rate", "instId": "BTC-USD-SWAP"}]
-# 指数K线频道
-# channels = [{"channel": "index-candle1m", "instId": "BTC-USDT"}]
-# 指数行情频道
-# channels = [{"channel": "index-tickers", "instId": "BTC-USDT"}]
-# status频道
-# channels = [{"channel": "status"}]
+channels = [{"channel": "account", "ccy": "BTC"}]
+channels = [{"channel": "positions", "instType": instType, "uly": "BTC-USDT", "instId": instId}]
+channels = [{"channel": "orders", "instType": instType, "uly": "BTC-USD", "instId": instId}]
+channels = [{"channel": "orders-algo", "instType": instType, "uly": "BTC-USD", "instId": instId}]
 
 '''
-私有频道 private channel
-:param channel: 频道名
-:param ccy: 币种
-:param instType: 产品类型
-:param uly: 合约标的指数
-:param instId: 产品ID
-
+Trade
 '''
 
-# 账户频道
-# channels = [{"channel": "account", "ccy": "BTC"}]
-# 持仓频道
-# channels = [{"channel": "positions", "instType": "FUTURES", "uly": "BTC-USDT", "instId": "BTC-USDT-210326"}]
-# 订单频道
-# channels = [{"channel": "orders", "instType": "FUTURES", "uly": "BTC-USD", "instId": "BTC-USD-201225"}]
-# 策略委托订单频道
-# channels = [{"channel": "orders-algo", "instType": "FUTURES", "uly": "BTC-USD", "instId": "BTC-USD-201225"}]
+trade_param_mkt = {
+    "id": "1512",
+    "op": "order",
+    "args": [
+        {
+            "side": "buy",
+            "instId": "BTC-USDT",
+            "tdMode": "isolated",
+            "ordType": "market",
+            "sz": "100"
+        }
+    ]
+}
+trade_param_limit = {
+    "id": "1512",
+    "op": "order",
+    "args": [
+        {"side": "buy",
+         "instId": "BTC-USDT",
+         "tdMode": "isolated",
+         "ordType": "limit",
+         "px": "19777",
+         "sz": "1"
+         }
+    ]
+}
+trade_param_batch = {
+    "id": "1512",
+    "op": "batch-orders",
+    "args": [
+        {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
+        {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
+    ]
+}
+trade_param_cancel = {
+    "id": "1512",
+    "op": "cancel-order",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259424589042823169"}
+    ]
+}
+trade_param_batch_cancel = {
+    "id": "1512",
+    "op": "batch-cancel-orders",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259432098826694656"},
+        {"instId": "BTC-USDT", "ordId": "259432098826694658"}
+    ]
+}
+trade_param_amend = {
+    "id": "1512",
+    "op": "amend-order",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259432767558135808", "newSz": "2"}
+    ]
+}
+trade_param_batch_amend = {
+    "id": "1512",
+    "op": "batch-amend-orders",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
+        {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
+    ]}
 
-'''
-交易 trade
-'''
-
-# 下单
-# trade_param = {"id": "1512", "op": "order", "args": [{"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19777", "sz": "1"}]}
-# 批量下单
-# trade_param = {"id": "1512", "op": "batch-orders", "args": [
-#         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
-#         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
-#     ]}
-# 撤单
-# trade_param = {"id": "1512", "op": "cancel-order", "args": [{"instId": "BTC-USDT", "ordId": "259424589042823169"}]}
-# 批量撤单
-# trade_param = {"id": "1512", "op": "batch-cancel-orders", "args": [
-#         {"instId": "BTC-USDT", "ordId": "259432098826694656"},
-#         {"instId": "BTC-USDT", "ordId": "259432098826694658"}
-#     ]}
-# 改单
-# trade_param = {"id": "1512", "op": "amend-order", "args": [{"instId": "BTC-USDT", "ordId": "259432767558135808", "newSz": "2"}]}
-# 批量改单
-# trade_param = {"id": "1512", "op": "batch-amend-orders", "args": [
-#         {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
-#         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
-#     ]}
 
 book_ws = WS()
 
-#loop = asyncio.get_event_loop()
+
+# loop = asyncio.get_event_loop()
 
 # 公共频道 不需要登录（行情，持仓总量，K线，标记价格，深度，资金费率等）
-#loop.run_until_complete(book_ws.subscribe_without_login(url, channels))
+# loop.run_until_complete(book_ws.subscribe_without_login(url, channels))
 
 # 私有频道 需要登录（账户，持仓，订单等）
 # loop.run_until_complete(subscribe(url, api_key, passphrase, secret_key, channels))
@@ -488,10 +490,9 @@ book_ws = WS()
 # 交易（下单，撤单，改单等）
 # loop.run_until_complete(trade(url, api_key, passphrase, secret_key, trade_param))
 
-#loop.close()
+# loop.close()
 
 class App(customtkinter.CTk):
-
     WIDTH = 780
     HEIGHT = 520
 
@@ -511,7 +512,7 @@ class App(customtkinter.CTk):
 
         self.title("CustomTkinter complex_example.py")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        #self.protocol("WM_DELETE_WINDOW", self.on_closiing)
+        # self.protocol("WM_DELETE_WINDOW", self.on_closiing)
 
         # ============ create ============
 
@@ -521,7 +522,9 @@ class App(customtkinter.CTk):
         self.frame_2 = customtkinter.CTkFrame(master=self, )
         self.frame_2.pack(pady=20, padx=60, fill="both", expand=True)
 
-        self.button_2 = customtkinter.CTkButton(master=self.frame_2, command=threading.Thread(target=self.tread_t()).start(), corner_radius=0)
+        self.button_2 = customtkinter.CTkButton(master=self.frame_2,
+                                                command=threading.Thread(target=self.tread_t()).start(),
+                                                corner_radius=0)
         self.button_2.pack()
 
         self.label_1 = customtkinter.CTkLabel(master=self.frame_1, justify=tkinter.LEFT)
@@ -529,16 +532,14 @@ class App(customtkinter.CTk):
 
         for i in range(7):
             self.button[i] = customtkinter.CTkButton(master=self.frame_1, command=self.button_callback, corner_radius=0,
-                                                textvariable=self.xf[i])
+                                                     textvariable=self.xf[i])
             self.button[i].pack()
-
 
     def button_callback(self):
         print("pressDwa")
         for i in range(7):
             r = rnd.random()
             self.xf[i].set(round(r, 6))
-
 
     def tread_t(self):
         print("sleep 1")
@@ -549,9 +550,9 @@ class App(customtkinter.CTk):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(book_ws.subscribe_without_login(url, channels))
 
+
 class TK_test(customtkinter.CTk):
     def __init__(self):
-
         super().__init__()
         self.frame_2 = customtkinter.CTkFrame(master=self, )
         self.frame_2.pack(pady=20, padx=60, fill="both", expand=True)
@@ -568,8 +569,6 @@ class TK_test(customtkinter.CTk):
         print("sleep 1")
         time.sleep(3)
         print("sleep 3")
-
-
 
 
 app = TK_test()
