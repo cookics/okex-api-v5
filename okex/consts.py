@@ -8,6 +8,10 @@ WS_URL_PUBLIC_DEMO = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
 WS_URL_PRIVATE = "wss://ws.okx.com:8443/ws/v5/private"
 WS_URL_DEMO_PRIVATE = "wss://ws.okx.com:8443/ws/v5/private?brokerId=9999"
 
+BTC_SWAP = "BTC-USDT-SWAP"
+FUTURES = "FUTURES"
+SWAP = "SWAP"
+
 CONTENT_TYPE = 'Content-Type'
 OK_ACCESS_KEY = 'OK-ACCESS-KEY'
 OK_ACCESS_SIGN = 'OK-ACCESS-SIGN'
