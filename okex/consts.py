@@ -1,6 +1,11 @@
 # http header
 API_URL = 'https://www.okx.com'
 
+WS_URL_PUBLIC = "wss://ws.okx.com:8443/ws/v5/public"
+WS_URL_PUBLIC_DEMO = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
+WS_URL_PRIVATE = "wss://ws.okx.com:8443/ws/v5/private"
+WS_URL_DEMO_PRIVATE = "wss://ws.okx.com:8443/ws/v5/private?brokerId=9999"
+
 CONTENT_TYPE = 'Content-Type'
 OK_ACCESS_KEY = 'OK-ACCESS-KEY'
 OK_ACCESS_SIGN = 'OK-ACCESS-SIGN'

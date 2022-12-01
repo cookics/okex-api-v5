@@ -7,6 +7,14 @@ import base64
 import zlib
 import datetime
 import time
+import customtkinter
+import tkinter
+import customtkinter
+import random as rnd
+import threading
+import time
+from okex.consts import *
+import Users.Bennett.Desktop.api_key.py
 
 
 def get_timestamp():
@@ -16,7 +24,7 @@ def get_timestamp():
 
 
 def get_server_time():
-    url = "https://www.okx.com/api/v5/public/time"
+    url = API_URL + SERVER_TIMESTAMP_URL
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()['data'][0]['ts']
@@ -200,14 +208,13 @@ async def subscribe_without_login(url, channels):
                     res = eval(res)
                     if 'event' in res:
                         continue
+                    print(f"Here is  l: {l}")
                     for i in res['arg']:
                         if 'books' in res['arg'][i] and 'books5' not in res['arg'][i]:
-                            # 订阅频道是深度频道
                             if res['action'] == 'snapshot':
                                 for m in l:
                                     if res['arg']['instId'] == m['instrument_id']:
                                         l.remove(m)
-                                # 获取首次全量深度数据
                                 bids_p, asks_p, instrument_id = partial(res)
                                 d = {}
                                 d['instrument_id'] = instrument_id
@@ -215,13 +222,13 @@ async def subscribe_without_login(url, channels):
                                 d['asks_p'] = asks_p
                                 l.append(d)
 
-                                # 校验checksum
+                                # checksum
                                 checksum = res['data'][0]['checksum']
-                                # print('推送数据的checksum为：' + str(checksum))
+                                # print('checksum：' + str(checksum))
                                 check_num = check(bids_p, asks_p)
-                                # print('校验后的checksum为：' + str(check_num))
+                                # print('checksum为：' + str(check_num))
                                 if check_num == checksum:
-                                    print("校验结果为：True")
+                                    print("True")
                                 else:
                                     print("校验结果为：False，正在重新订阅……")
 
@@ -386,7 +393,7 @@ passphrase = ""
 
 # WebSocket公共频道 public channels
 # 实盘 real trading
-# url = "wss://ws.okx.com:8443/ws/v5/public"
+url = "wss://ws.okx.com:8443/ws/v5/public"
 # 模拟盘 demo trading
 # url = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
 
@@ -414,17 +421,17 @@ passphrase = ""
 # K线频道
 # channels = [{"channel": "candle1m", "instId": "BTC-USD-210326"}]
 # 交易频道
-# channels = [{"channel": "trades", "instId": "BTC-USD-201225"}]
+channels = [{"channel": "trades", "instId": "BTC-USDT-SWAP"}]
 # 预估交割/行权价格频道
 # channels = [{"channel": "estimated-price", "instType": "FUTURES", "uly": "BTC-USD"}]
 # 标记价格频道
-# channels = [{"channel": "mark-price", "instId": "BTC-USDT-210326"}]
+#channels = [{"channel": "mark-price", "instId": "BTC-USDT-SWAP"}]
 # 标记价格K线频道
 # channels = [{"channel": "mark-price-candle1D", "instId": "BTC-USD-201225"}]
 # 限价频道
 # channels = [{"channel": "price-limit", "instId": "BTC-USD-201225"}]
 # 深度频道
-# channels = [{"channel": "books", "instId": "BTC-USD-SWAP"}]
+channels = [{"channel": "books", "instId": "BTC-USDT-SWAP"}]
 # 期权定价频道
 # channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
 # 资金费率频道
@@ -481,16 +488,74 @@ passphrase = ""
 #         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
 #     ]}
 
+class App(customtkinter.CTk):
 
+    WIDTH = 780
+    HEIGHT = 520
+
+    xf = [None] * 7
+    button = [None] * 7
+
+    def __init__(self):
+
+        super().__init__()
+
+        for i in range(7):
+            self.xf[i] = customtkinter.StringVar()
+            r = rnd.random()
+            self.xf[i].set(round(r, 6))
+        for i in range(7):
+            print(self.xf[i])
+
+        self.title("CustomTkinter complex_example.py")
+        self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
+        #self.protocol("WM_DELETE_WINDOW", self.on_closiing)
+
+        # ============ create ============
+
+        self.frame_1 = customtkinter.CTkFrame(master=self, )
+        self.frame_1.pack(pady=20, padx=60, fill="both", expand=True)
+
+        self.frame_2 = customtkinter.CTkFrame(master=self, )
+        self.frame_2.pack(pady=20, padx=60, fill="both", expand=True)
+
+        self.button_2 = customtkinter.CTkButton(master=self.frame_2, command=lambda: threading.Thread(target=run_trades).start(), corner_radius=0)
+        self.button_2.pack()
+
+        self.label_1 = customtkinter.CTkLabel(master=self.frame_1, justify=tkinter.LEFT)
+        self.label_1.pack()  # pady=12, padx=10)
+
+        for i in range(7):
+            #self.xf[i].set("Poo")
+            self.button[i] = customtkinter.CTkButton(master=self.frame_1, command=self.button_callback, corner_radius=0,
+                                                textvariable=self.xf[i])
+            self.button[i].pack()  # pady=12, padx=10)
+
+
+    def button_callback(self):
+        print("press")
+        for i in range(7):
+            r = rnd.random()
+            self.xf[i].set(round(r, 6))
+
+def run_trades():
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(subscribe_without_login(url, channels))
+    loop.close()
 loop = asyncio.get_event_loop()
+app = App()
+app.mainloop()
 
-# 公共频道 不需要登录（行情，持仓总量，K线，标记价格，深度，资金费率等）
-# loop.run_until_complete(subscribe_without_login(url, channels))
+#run_trades()
 
-# 私有频道 需要登录（账户，持仓，订单等）
+
+
+#loop.run_until_complete(subscribe_without_login(url, channels))
+
+
 # loop.run_until_complete(subscribe(url, api_key, passphrase, secret_key, channels))
 
-# 交易（下单，撤单，改单等）
+
 # loop.run_until_complete(trade(url, api_key, passphrase, secret_key, trade_param))
 
-loop.close()
+#loop.close()
