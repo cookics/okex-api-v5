@@ -385,108 +385,111 @@ async def unsubscribe_without_login(url, channels):
         res = await ws.recv()
         print(f"recv: {res}")
 
+"""
+Public
+"""
 
-api_key = ""
-secret_key = ""
-passphrase = ""
+instId = BTC_SWAP
+instType = SWAP
 
+channels = [{"channel": "instruments", "instType": instType}]
+channels = [{"channel": "tickers", "instId": instId}]
+channels = [{"channel": "open-interest", "instId": instId}]
+channels = [{"channel": "candle1m", "instId": instId}]
+channels = [{"channel": "trades", "instId": instId}]
+channels = [{"channel": "estimated-price", "instType": instType, "uly": "BTC-USD"}]
+channels = [{"channel": "mark-price", "instId": instId}]
+channels = [{"channel": "mark-price-candle1D", "instId": instId}]
+channels = [{"channel": "price-limit", "instId":instId}]
+channels = [{"channel": "books", "instId": instId}]
+channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
+channels = [{"channel": "funding-rate", "instId": instId}]
+channels = [{"channel": "index-candle1m", "instId": instId}]
+channels = [{"channel": "index-tickers", "instId": instId}]
+channels = [{"channel": "status"}]
 
-# WebSocket公共频道 public channels
-# 实盘 real trading
-url = "wss://ws.okx.com:8443/ws/v5/public"
-# 模拟盘 demo trading
-# url = "wss://ws.okx.com:8443/ws/v5/public?brokerId=9999"
+"""
+Private
+"""
 
-# WebSocket私有频道 private channels
-# 实盘 real trading
-# url = "wss://ws.okx.com:8443/ws/v5/private"
-# 模拟盘 demo trading
-# url = "wss://ws.okx.com:8443/ws/v5/private?brokerId=9999"
-
-'''
-公共频道 public channel
-:param channel: 频道名
-:param instType: 产品类型
-:param instId: 产品ID
-:param uly: 合约标的指数
-
-'''
-
-# 产品频道
-# channels = [{"channel": "instruments", "instType": "FUTURES"}]
-# 行情频道 tickers channel
-# channels = [{"channel": "tickers", "instId": "BTC-USD-210326"}]
-# 持仓总量频道 
-# channels = [{"channel": "open-interest", "instId": "BTC-USD-210326"}]
-# K线频道
-# channels = [{"channel": "candle1m", "instId": "BTC-USD-210326"}]
-# 交易频道
-channels = [{"channel": "trades", "instId": "BTC-USDT-SWAP"}]
-# 预估交割/行权价格频道
-# channels = [{"channel": "estimated-price", "instType": "FUTURES", "uly": "BTC-USD"}]
-# 标记价格频道
-#channels = [{"channel": "mark-price", "instId": "BTC-USDT-SWAP"}]
-# 标记价格K线频道
-# channels = [{"channel": "mark-price-candle1D", "instId": "BTC-USD-201225"}]
-# 限价频道
-# channels = [{"channel": "price-limit", "instId": "BTC-USD-201225"}]
-# 深度频道
-channels = [{"channel": "books", "instId": "BTC-USDT-SWAP"}]
-# 期权定价频道
-# channels = [{"channel": "opt-summary", "uly": "BTC-USD"}]
-# 资金费率频道
-# channels = [{"channel": "funding-rate", "instId": "BTC-USD-SWAP"}]
-# 指数K线频道
-# channels = [{"channel": "index-candle1m", "instId": "BTC-USDT"}]
-# 指数行情频道
-# channels = [{"channel": "index-tickers", "instId": "BTC-USDT"}]
-# status频道
-# channels = [{"channel": "status"}]
+channels = [{"channel": "account", "ccy": "BTC"}]
+channels = [{"channel": "positions", "instType": instType, "uly": "BTC-USDT", "instId": instId}]
+channels = [{"channel": "orders", "instType": instType, "uly": "BTC-USD", "instId": instId}]
+channels = [{"channel": "orders-algo", "instType": instType, "uly": "BTC-USD", "instId": instId}]
 
 '''
-私有频道 private channel
-:param channel: 频道名
-:param ccy: 币种
-:param instType: 产品类型
-:param uly: 合约标的指数
-:param instId: 产品ID
-
+Trade
 '''
 
-# 账户频道
-# channels = [{"channel": "account", "ccy": "BTC"}]
-# 持仓频道
-# channels = [{"channel": "positions", "instType": "FUTURES", "uly": "BTC-USDT", "instId": "BTC-USDT-210326"}]
-# 订单频道
-# channels = [{"channel": "orders", "instType": "FUTURES", "uly": "BTC-USD", "instId": "BTC-USD-201225"}]
-# 策略委托订单频道
-# channels = [{"channel": "orders-algo", "instType": "FUTURES", "uly": "BTC-USD", "instId": "BTC-USD-201225"}]
 
-'''
-交易 trade
-'''
 
-# 下单
-# trade_param = {"id": "1512", "op": "order", "args": [{"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19777", "sz": "1"}]}
-# 批量下单
-# trade_param = {"id": "1512", "op": "batch-orders", "args": [
-#         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
-#         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
-#     ]}
-# 撤单
-# trade_param = {"id": "1512", "op": "cancel-order", "args": [{"instId": "BTC-USDT", "ordId": "259424589042823169"}]}
-# 批量撤单
-# trade_param = {"id": "1512", "op": "batch-cancel-orders", "args": [
-#         {"instId": "BTC-USDT", "ordId": "259432098826694656"},
-#         {"instId": "BTC-USDT", "ordId": "259432098826694658"}
-#     ]}
-# 改单
-# trade_param = {"id": "1512", "op": "amend-order", "args": [{"instId": "BTC-USDT", "ordId": "259432767558135808", "newSz": "2"}]}
-# 批量改单
-# trade_param = {"id": "1512", "op": "batch-amend-orders", "args": [
-#         {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
-#         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
-#     ]}
+trade_pram_mkt = {
+  "id": "1512",
+  "op": "order",
+  "args": [
+    {
+      "side": "buy",
+      "instId": "BTC-USDT",
+      "tdMode": "isolated",
+      "ordType": "market",
+      "sz": "100"
+    }
+  ]
+}
+trade_param_limit = {
+    "id": "1512",
+    "op": "order",
+    "args": [
+        {"side": "buy",
+         "instId": "BTC-USDT",
+         "tdMode": "isolated",
+         "ordType": "limit",
+         "px": "19777",
+         "sz": "1"
+         }
+    ]
+}
+trade_param_batch = {
+    "id": "1512",
+    "op": "batch-orders",
+    "args": [
+         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19666", "sz": "1"},
+         {"side": "buy", "instId": "BTC-USDT", "tdMode": "isolated", "ordType": "limit", "px": "19633", "sz": "1"}
+     ]
+}
+
+trade_param_cancel = {
+    "id": "1512",
+    "op": "cancel-order",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259424589042823169"}
+    ]
+}
+
+trade_param_batch_cancel = {
+    "id": "1512",
+    "op": "batch-cancel-orders",
+    "args": [
+         {"instId": "BTC-USDT", "ordId": "259432098826694656"},
+         {"instId": "BTC-USDT", "ordId": "259432098826694658"}
+     ]
+}
+
+trade_param_amend = {
+    "id": "1512",
+    "op": "amend-order",
+    "args": [
+        {"instId": "BTC-USDT", "ordId": "259432767558135808", "newSz": "2"}
+    ]
+}
+
+trade_param_batch_amend = {
+    "id": "1512",
+    "op": "batch-amend-orders",
+    "args": [
+         {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
+         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
+     ]}
 
 class App(customtkinter.CTk):
 
@@ -538,6 +541,7 @@ class App(customtkinter.CTk):
             r = rnd.random()
             self.xf[i].set(round(r, 6))
 
+url = WS_URL_PUBLIC_DEMO
 def run_trades():
     asyncio.set_event_loop(loop)
     loop.run_until_complete(subscribe_without_login(url, channels))
