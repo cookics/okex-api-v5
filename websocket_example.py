@@ -198,7 +198,7 @@ async def subscribe_without_login(url, channels):
                             print(res)
                             continue
                         except Exception as e:
-                            print("连接关闭，正在重连……")
+                            print("Unsubscribe receive Fail")
                             break
 
                     print(get_timestamp() + res)
@@ -227,7 +227,7 @@ async def subscribe_without_login(url, channels):
                                 if check_num == checksum:
                                     print("True")
                                 else:
-                                    print("校验结果为：False，正在重新订阅……")
+                                    print("Checksum Fail")
 
                                     # 取消订阅
                                     await unsubscribe_without_login(url, channels)
@@ -299,13 +299,13 @@ async def subscribe(url, api_key, passphrase, secret_key, channels):
                             print(res)
                             continue
                         except Exception as e:
-                            print("连接关闭，正在重连……")
+                            print("Fail Receive")
                             break
 
                     print(get_timestamp() + res)
 
         except Exception as e:
-            print("连接断开，正在重连……")
+            print("Fail Async")
             continue
 
 
@@ -336,19 +336,18 @@ async def trade(url, api_key, passphrase, secret_key, trade_param):
                             print(res)
                             continue
                         except Exception as e:
-                            print("连接关闭，正在重连……")
+                            print("Trade Fail")
                             break
 
                     print(get_timestamp() + res)
 
         except Exception as e:
-            print("连接断开，正在重连……")
+            print("Trade Connect Fail")
             continue
 
 
 async def unsubscribe(url, api_key, passphrase, secret_key, channels):
     async with websockets.connect(url) as ws:
-        # login
         timestamp = str(get_local_timestamp())
         login_str = login_params(timestamp, api_key, passphrase, secret_key)
         await ws.send(login_str)
@@ -376,6 +375,7 @@ async def unsubscribe_without_login(url, channels):
         res = await ws.recv()
         print(f"recv: {res}")
 
+'''
 
 """
 Public
@@ -409,9 +409,9 @@ channels = [{"channel": "positions", "instType": instType, "uly": "BTC-USDT", "i
 channels = [{"channel": "orders", "instType": instType, "uly": "BTC-USD", "instId": instId}]
 channels = [{"channel": "orders-algo", "instType": instType, "uly": "BTC-USD", "instId": instId}]
 
-'''
+"""
 Trade
-'''
+"""
 
 trade_param_mkt = {
     "id": "1512",
@@ -476,7 +476,7 @@ trade_param_batch_amend = {
         {"instId": "BTC-USDT", "ordId": "259435442492289024", "newSz": "2"},
         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
     ]}
-
+'''
 
 class App(customtkinter.CTk):
     WIDTH = 780

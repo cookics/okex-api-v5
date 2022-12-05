@@ -475,21 +475,13 @@ trade_param_batch_amend = {
         {"instId": "BTC-USDT", "ordId": "259435442496483328", "newSz": "3"}
     ]}
 
-
 book_ws = WS()
 
 
 # loop = asyncio.get_event_loop()
-
-# 公共频道 不需要登录（行情，持仓总量，K线，标记价格，深度，资金费率等）
 # loop.run_until_complete(book_ws.subscribe_without_login(url, channels))
-
-# 私有频道 需要登录（账户，持仓，订单等）
 # loop.run_until_complete(subscribe(url, api_key, passphrase, secret_key, channels))
-
-# 交易（下单，撤单，改单等）
 # loop.run_until_complete(trade(url, api_key, passphrase, secret_key, trade_param))
-
 # loop.close()
 
 class App(customtkinter.CTk):
@@ -551,7 +543,7 @@ class App(customtkinter.CTk):
         loop.run_until_complete(book_ws.subscribe_without_login(url, channels))
 
 
-class TK_test(customtkinter.CTk):
+class TKtest(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.frame_2 = customtkinter.CTkFrame(master=self, )
@@ -571,5 +563,6 @@ class TK_test(customtkinter.CTk):
         print("sleep 3")
 
 
-app = TK_test()
+url = WS_URL_PUBLIC_DEMO
+app = TKtest()
 app.mainloop()

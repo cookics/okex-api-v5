@@ -162,11 +162,11 @@ class OB:
                     asks_p.sort(key=lambda price: sort_num(price[0]))
                     # print('合并后的asks为：' + str(asks_p) + '，档数为：' + str(len(asks_p)))j
 
-                if self.bb[-1] != bids_p[0][0]:
-                    self.bb.append(bids_p[0][0])
+                if self.bb[-1][1] != bids_p[0][0]:
+                    self.bb.append([get_timestamp(), bids_p[0][0]])
                     print(self.bb)
-                if self.bo[-1] != asks_p[0][0]:
-                    self.bo.append(asks_p[0][0])
+                if self.bo[-1][1] != asks_p[0][0]:
+                    self.bo.append([get_timestamp(), asks_p[0][0]])
                     print(self.bo)
 
 
@@ -315,8 +315,8 @@ class App(customtkinter.CTk):
             if num == self.num_buttons - 1:
                 break
 
-        bo = float(btc_book.bo[-1])
-        bb = float(btc_book.bb[-1])
+        bo = float(btc_book.bo[-1][1])
+        bb = float(btc_book.bb[-1][1])
         spread = bo - bb
         dif = (bo - bb) / bb
         dif_bps = dif * 100 * 100
