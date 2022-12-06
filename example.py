@@ -236,7 +236,7 @@ if __name__ == '__main__':
             mv = 0
             continue
         print(f"{mv}, num:{num}")
-        spreads.append([mv, round(dif_bps,4), namae_i])
+        spreads.append([mv*100, round(dif_bps,4), namae_i])
 
     spreads.sort()
     for i in spreads:
