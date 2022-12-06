@@ -108,6 +108,7 @@ class App(CT.CTk):
         self.button_time = CT.CTkButton(master=self.frame_2, textvariable=self.text_update, pady=20, padx=20, ).pack()
 
     def update(self):
+        spreads.clear()
         get_spreads(5)
         for i in range(self.num_buttons):
             self.text_val[i].set(spreads[i][0])
